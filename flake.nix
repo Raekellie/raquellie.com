@@ -30,9 +30,9 @@
 						pkgs.stdenv.mkDerivation {
 							name = "raquellie.com";
 							src = ./.;
-							nativeBuildInputs = with pkgs; [];
+							nativeBuildInputs = with pkgs; [zola];
 
-							buildPhase = ''touch $out'';
+							buildPhase = ''zola build --output-dir "$out"'';
 
 							meta = {
 								description = "My website :3";
