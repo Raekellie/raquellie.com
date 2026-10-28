@@ -1,21 +1,5 @@
 {
   "nodes": {
-    "archie-zola": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1788922191,
-        "narHash": "sha256-rnJVocPa2fods/dxr1fdubHyQ7r7Vy5iwJGB/T9CcTg=",
-        "owner": "XXXMrG",
-        "repo": "archie-zola",
-        "rev": "e9bfd022102b09486c84001ea39ff0a2cd7600a0",
-        "type": "github"
-      },
-      "original": {
-        "owner": "XXXMrG",
-        "repo": "archie-zola",
-        "type": "github"
-      }
-    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1793110635,
@@ -34,8 +18,24 @@
     },
     "root": {
       "inputs": {
-        "archie-zola": "archie-zola",
-        "nixpkgs": "nixpkgs"
+        "nixpkgs": "nixpkgs",
+        "theme": "theme"
+      }
+    },
+    "theme": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1788922191,
+        "narHash": "sha256-rnJVocPa2fods/dxr1fdubHyQ7r7Vy5iwJGB/T9CcTg=",
+        "owner": "XXXMrG",
+        "repo": "archie-zola",
+        "rev": "e9bfd022102b09486c84001ea39ff0a2cd7600a0",
+        "type": "github"
+      },
+      "original": {
+        "owner": "XXXMrG",
+        "repo": "archie-zola",
+        "type": "github"
       }
     }
   },

@@ -1,2 +1,6 @@
 public/
 result
+
+# Keep the empty directory to facilitate working
+themes/
+!themes/.gitkeep

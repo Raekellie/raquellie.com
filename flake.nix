@@ -4,8 +4,7 @@
 	inputs = {
 		nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
 
-		# Theme
-		archie-zola = {
+		theme = {
 			url = "github:XXXMrG/archie-zola";
 			flake = false;
 		};
@@ -30,6 +29,8 @@
 					f {
 						pkgs = import nixpkgs {inherit system;};
 					});
+
+		themeName = "archie-zola";
 	in {
 		packages =
 			forAllSystems ({pkgs}: {
@@ -40,7 +41,7 @@
 							# Fails to build without any CA certs on the system
 							nativeBuildInputs = with pkgs; [zola cacert];
 
-							preBuild = ''ln -s ${inputs.archie-zola} themes/archie-zola'';
+							preBuild = ''ln -s ${inputs.theme} themes/${themeName}'';
 							buildPhase = ''runHook preBuild; zola build; runHook postBuild'';
 
 							installPhase = ''mv public $out'';
@@ -49,6 +50,15 @@
 								description = "My website :3";
 								homepage = "https://raquellie.com";
 							};
+						};
+				});
+		devShells =
+			forAllSystems ({pkgs}: {
+					default =
+						pkgs.mkShell {
+							packages = with pkgs; [zola];
+							# Print a newline at the end to work around the shell prompt getting messed up when CTRL+C-ing
+							shellHook = ''rm -f themes/${themeName}; ln -s ${inputs.theme} themes/${themeName}; zola serve; echo'';
 						};
 				});
 		# Defining `devShells` is not necessary because `nix develop` drops us into a shell with the default
