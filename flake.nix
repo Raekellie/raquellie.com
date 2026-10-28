@@ -2,13 +2,20 @@
 	description = "My personal website's builder";
 
 	inputs = {
-		nixpkgs.url = "github:nixos/nixpkgs/nixos-26.05";
+		nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+
+		# Theme
+		archie-zola = {
+			url = "github:XXXMrG/archie-zola";
+			flake = false;
+		};
 	};
 
 	outputs = {
 		self,
 		nixpkgs,
-	}: let
+		...
+	} @ inputs: let
 		# https://zero-to-nix.com/concepts/flakes/#system-specificity and https://wiki.nixos.org/wiki/Flakes#Core_usage_patterns
 		# Architecture list copied from Zola's
 		systems = [
@@ -30,9 +37,13 @@
 						pkgs.stdenv.mkDerivation {
 							name = "raquellie.com";
 							src = ./.;
-							nativeBuildInputs = with pkgs; [zola];
+							# Fails to build without any CA certs on the system
+							nativeBuildInputs = with pkgs; [zola cacert];
 
-							buildPhase = ''zola build --output-dir "$out"'';
+							preBuild = ''ln -s ${inputs.archie-zola} themes/archie-zola'';
+							buildPhase = ''runHook preBuild; zola build; runHook postBuild'';
+
+							installPhase = ''mv public $out'';
 
 							meta = {
 								description = "My website :3";
