@@ -16,7 +16,7 @@
 		...
 	} @ inputs: let
 		# https://zero-to-nix.com/concepts/flakes/#system-specificity and https://wiki.nixos.org/wiki/Flakes#Core_usage_patterns
-		# Architecture list copied from Zola's
+		# Architecture list copied from Zola's. This part is, by all intents and purposes, overengineering
 		systems = [
 			"aarch64-darwin"
 			"aarch64-linux"
@@ -44,7 +44,7 @@
 							preBuild = ''ln -s ${inputs.theme} themes/${themeName}'';
 							buildPhase = ''runHook preBuild; zola build; runHook postBuild'';
 
-							installPhase = ''mv public $out'';
+							installPhase = ''runHook preInstall; mv public $out; runHook postInstall'';
 
 							meta = {
 								description = "My website :3";
@@ -56,12 +56,9 @@
 			forAllSystems ({pkgs}: {
 					default =
 						pkgs.mkShell {
-							packages = with pkgs; [zola];
-							# Print a newline at the end to work around the shell prompt getting messed up when CTRL+C-ing
-							shellHook = ''rm -f themes/${themeName}; ln -s ${inputs.theme} themes/${themeName}; zola serve; echo'';
+							packages = with pkgs; [zola cacert];
+							shellHook = ''ln -sfn ${inputs.theme} themes/${themeName}'';
 						};
 				});
-		# Defining `devShells` is not necessary because `nix develop` drops us into a shell with the default
-		# build dependencies by default
 	};
 }
